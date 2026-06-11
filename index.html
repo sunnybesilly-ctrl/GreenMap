@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Greenlight</title>
+<meta name="theme-color" content="#131614">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Greenlight">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="icon" type="image/png" href="./icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+  :root{
+    --asphalt:#131614;
+    --panel:#1c211d;
+    --panel-edge:#2a322c;
+    --cream:#f2e9d4;
+    --cream-dim:#b8b2a0;
+    --go:#5bd98a;
+    --go-deep:#2f6b45;
+    --amber:#e8a33d;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;overflow:hidden;background:var(--asphalt)}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--cream)}
+  #map{position:fixed;inset:0}
+
+  /* ---- top bar ---- */
+  .topbar{
+    position:fixed;top:0;left:0;right:0;z-index:10;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:calc(env(safe-area-inset-top, 0px) + 10px) 14px 10px;
+    background:linear-gradient(to bottom, rgba(19,22,20,.92), rgba(19,22,20,.75) 70%, rgba(19,22,20,0));
+    pointer-events:none;
+  }
+  .brand{display:flex;align-items:baseline;gap:8px;pointer-events:auto}
+  .brand h1{
+    font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:21px;
+    letter-spacing:.01em;color:var(--cream);
+  }
+  .brand .dotmark{display:inline-block;width:9px;height:9px;border-radius:50%;
+    background:var(--go);box-shadow:0 0 8px rgba(91,217,138,.8);transform:translateY(-1px)}
+  .brand small{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--cream-dim)}
+
+  /* ---- sunset chip (signature element) ---- */
+  .sunchip{
+    pointer-events:auto;display:flex;align-items:center;gap:7px;
+    background:var(--panel);border:1px solid var(--panel-edge);border-radius:999px;
+    padding:7px 12px;font-size:12.5px;font-weight:600;letter-spacing:.02em;
+    color:var(--cream);white-space:nowrap;
+    transition:border-color .6s, box-shadow .6s;
+  }
+  .sunchip .sun{width:10px;height:10px;border-radius:50%;background:var(--go);transition:background .6s, box-shadow .6s}
+  .sunchip.warn{border-color:rgba(232,163,61,.55);box-shadow:0 0 14px rgba(232,163,61,.18)}
+  .sunchip.warn .sun{background:var(--amber);box-shadow:0 0 8px rgba(232,163,61,.9)}
+  .sunchip.night .sun{background:#7a87b8;box-shadow:0 0 8px rgba(122,135,184,.8)}
+  .sunchip span.lbl{color:var(--cream-dim);font-weight:500}
+
+  /* ---- locate button ---- */
+  .locate{
+    position:fixed;right:16px;bottom:calc(env(safe-area-inset-bottom, 0px) + 26px);z-index:10;
+    width:58px;height:58px;border-radius:50%;border:1px solid var(--panel-edge);
+    background:var(--panel);color:var(--cream);cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 18px rgba(0,0,0,.5);
+    transition:background .25s,border-color .25s;
+  }
+  .locate svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+  .locate.on{background:var(--go-deep);border-color:var(--go);color:#eafff1}
+  .locate:active{transform:scale(.94)}
+
+  /* ---- GPS beacon marker ---- */
+  .beacon{width:22px;height:22px;position:relative}
+  .beacon .core{
+    position:absolute;inset:3px;border-radius:50%;background:var(--go);
+    border:2.5px solid var(--asphalt);box-shadow:0 0 10px rgba(91,217,138,.9);
+  }
+  .beacon .pulse{
+    position:absolute;inset:0;border-radius:50%;background:rgba(91,217,138,.45);
+    animation:pulse 2.2s ease-out infinite;
+  }
+  @keyframes pulse{
+    0%{transform:scale(.6);opacity:.9}
+    70%{transform:scale(2.6);opacity:0}
+    100%{transform:scale(2.6);opacity:0}
+  }
+  @media (prefers-reduced-motion: reduce){.beacon .pulse{animation:none;opacity:.35;transform:scale(1.4)}}
+
+  /* ---- toast ---- */
+  .toast{
+    position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom, 0px) + 100px);
+    transform:translateX(-50%) translateY(20px);z-index:20;
+    background:var(--panel);border:1px solid var(--panel-edge);border-radius:12px;
+    padding:10px 16px;font-size:13px;color:var(--cream);max-width:86vw;text-align:center;
+    opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* ---- iOS install sheet ---- */
+  .sheet{
+    position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom, 0px) + 12px);
+    z-index:30;background:var(--panel);border:1px solid var(--panel-edge);
+    border-radius:16px;padding:16px 16px 14px;box-shadow:0 -6px 30px rgba(0,0,0,.55);
+    display:none;
+  }
+  .sheet.show{display:block}
+  .sheet h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:16px;margin-bottom:8px}
+  .sheet ol{margin:0 0 4px 18px;font-size:13.5px;line-height:1.65;color:var(--cream-dim)}
+  .sheet ol b{color:var(--cream);font-weight:600}
+  .sheet .shareglyph{display:inline-block;transform:translateY(2px)}
+  .sheet button{
+    margin-top:10px;width:100%;padding:11px;border:none;border-radius:10px;
+    background:var(--go-deep);color:#eafff1;font-size:14px;font-weight:600;cursor:pointer;
+  }
+  .maplibregl-ctrl-attrib{background:rgba(19,22,20,.7)!important;color:var(--cream-dim)!important;font-size:10px!important}
+  .maplibregl-ctrl-attrib a{color:var(--cream-dim)!important}
+</style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<div class="topbar">
+  <div class="brand">
+    <h1>Greenlight<span class="dotmark"></span></h1>
+    <small>night road</small>
+  </div>
+  <div class="sunchip" id="sunchip" style="visibility:hidden">
+    <div class="sun"></div><span class="lbl">sunset</span>&nbsp;<span id="suntime">—</span>
+  </div>
+</div>
+
+<button class="locate" id="locateBtn" aria-label="Show my location">
+  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/><circle cx="12" cy="12" r="7.5"/></svg>
+</button>
+
+<div class="toast" id="toast"></div>
+
+<div class="sheet" id="installSheet">
+  <h2>Put Greenlight on your home screen</h2>
+  <ol>
+    <li>Tap the <b>Share</b> button <span class="shareglyph">&#x2B06;&#xFE0E;</span> at the bottom of Safari</li>
+    <li>Scroll down, tap <b>Add to Home Screen</b></li>
+    <li>Tap <b>Add</b> — it opens full-screen like an app</li>
+  </ol>
+  <button id="dismissSheet">Got it</button>
+</div>
+
+<script>
+/* ================= map ================= */
+const map = new maplibregl.Map({
+  container: 'map',
+  style: 'https://tiles.openfreemap.org/styles/liberty',
+  center: [-97.3964, 27.8006],   // Corpus Christi default
+  zoom: 10,
+  attributionControl: { compact: true }
+});
+
+/* ================= toast ================= */
+let toastTimer;
+function toast(msg, ms = 3500){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), ms);
+}
+
+/* ================= GPS beacon ================= */
+const beaconEl = document.createElement('div');
+beaconEl.className = 'beacon';
+beaconEl.innerHTML = '<div class="pulse"></div><div class="core"></div>';
+const beacon = new maplibregl.Marker({ element: beaconEl });
+
+let watching = false, watchId = null, following = false, hasFix = false;
+let lastPos = null;
+
+function accuracyCircle(lng, lat, radiusM){
+  const pts = 48, coords = [];
+  const latR = lat * Math.PI / 180;
+  const dLat = radiusM / 111320;
+  const dLng = radiusM / (111320 * Math.cos(latR));
+  for(let i = 0; i <= pts; i++){
+    const a = (i / pts) * 2 * Math.PI;
+    coords.push([lng + dLng * Math.cos(a), lat + dLat * Math.sin(a)]);
+  }
+  return { type:'Feature', geometry:{ type:'Polygon', coordinates:[coords] } };
+}
+
+function ensureAccuracyLayer(){
+  if(map.getSource('acc')) return;
+  map.addSource('acc', { type:'geojson', data:{ type:'FeatureCollection', features:[] } });
+  map.addLayer({
+    id:'acc-fill', type:'fill', source:'acc',
+    paint:{ 'fill-color':'#5bd98a', 'fill-opacity':0.10 }
+  });
+  map.addLayer({
+    id:'acc-line', type:'line', source:'acc',
+    paint:{ 'line-color':'#5bd98a', 'line-opacity':0.35, 'line-width':1 }
+  });
+}
+
+function onFix(pos){
+  const { longitude:lng, latitude:lat, accuracy } = pos.coords;
+  lastPos = pos;
+  ensureAccuracyLayer();
+  map.getSource('acc').setData(accuracyCircle(lng, lat, accuracy || 30));
+  beacon.setLngLat([lng, lat]);
+  if(!hasFix){
+    beacon.addTo(map);
+    map.easeTo({ center:[lng, lat], zoom: Math.max(map.getZoom(), 14), duration: 1200 });
+    hasFix = true;
+  } else if(following){
+    map.easeTo({ center:[lng, lat], duration: 800 });
+  }
+  updateSunChip(lat, lng);
+}
+
+function onErr(err){
+  watching = false; following = false;
+  document.getElementById('locateBtn').classList.remove('on');
+  if(err.code === 1) toast('Location blocked — allow it in Settings \u203A Safari \u203A Location');
+  else toast('Couldn\u2019t get a GPS fix. Try again with a clearer sky view.');
+}
+
+document.getElementById('locateBtn').addEventListener('click', () => {
+  const btn = document.getElementById('locateBtn');
+  if(!('geolocation' in navigator)){ toast('No location support on this device'); return; }
+  if(!watching){
+    watching = true; following = true;
+    btn.classList.add('on');
+    watchId = navigator.geolocation.watchPosition(onFix, onErr,
+      { enableHighAccuracy:true, maximumAge:3000, timeout:15000 });
+    toast('Finding you\u2026', 2000);
+  } else if(!following){
+    following = true;
+    btn.classList.add('on');
+    if(lastPos) map.easeTo({ center:[lastPos.coords.longitude, lastPos.coords.latitude], duration: 800 });
+  } else {
+    navigator.geolocation.clearWatch(watchId);
+    watching = false; following = false; hasFix = false;
+    beacon.remove();
+    if(map.getSource('acc')) map.getSource('acc').setData({ type:'FeatureCollection', features:[] });
+    btn.classList.remove('on');
+    toast('Location off', 1600);
+  }
+});
+
+map.on('dragstart', () => {
+  if(following){
+    following = false;
+    document.getElementById('locateBtn').classList.remove('on');
+  }
+});
+
+/* ================= sunset (NOAA / SunCalc method) ================= */
+const J1970=2440588, J2000=2451545, dayMs=864e5, rad=Math.PI/180, e=rad*23.4397;
+const toJulian = d => d.valueOf()/dayMs - 0.5 + J1970;
+const fromJulian = j => new Date((j + 0.5 - J1970) * dayMs);
+const toDays = d => toJulian(d) - J2000;
+const solarMeanAnomaly = d => rad * (357.5291 + 0.98560028 * d);
+function eclipticLongitude(M){
+  const C = rad * (1.9148*Math.sin(M) + 0.02*Math.sin(2*M) + 0.0003*Math.sin(3*M));
+  return M + C + rad*102.9372 + Math.PI;
+}
+function sunsetFor(date, lat, lng){
+  const lw = rad * -lng, phi = rad * lat, d = toDays(date);
+  const n = Math.round(d - 0.0009 - lw/(2*Math.PI));
+  const ds = 0.0009 + lw/(2*Math.PI) + n;
+  const M = solarMeanAnomaly(ds), L = eclipticLongitude(M);
+  const dec = Math.asin(Math.sin(e) * Math.sin(L));
+  const h = rad * -0.833;
+  const cosW = (Math.sin(h) - Math.sin(phi)*Math.sin(dec)) / (Math.cos(phi)*Math.cos(dec));
+  if(cosW < -1 || cosW > 1) return null; // polar day/night
+  const w = Math.acos(cosW);
+  const a = 0.0009 + (w + lw)/(2*Math.PI) + n;
+  return fromJulian(J2000 + a + 0.0053*Math.sin(M) - 0.0069*Math.sin(2*L));
+}
+
+let sunTimer = null;
+function updateSunChip(lat, lng){
+  const chip = document.getElementById('sunchip');
+  const out = document.getElementById('suntime');
+  const lbl = chip.querySelector('.lbl');
+  function render(){
+    const now = new Date();
+    let set = sunsetFor(now, lat, lng);
+    if(!set){ chip.style.visibility = 'hidden'; return; }
+    if(set < now){
+      const tomorrow = new Date(now.getTime() + dayMs);
+      const nextSet = sunsetFor(tomorrow, lat, lng);
+      chip.className = 'sunchip night';
+      lbl.textContent = 'dark until sunrise \u00B7 next sunset';
+      out.textContent = nextSet ? nextSet.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}) : '—';
+    } else {
+      const mins = Math.round((set - now) / 60000);
+      const hrs = Math.floor(mins / 60), m = mins % 60;
+      const cd = hrs > 0 ? `${hrs}h ${m}m` : `${m}m`;
+      out.textContent = `${set.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'})} \u00B7 ${cd}`;
+      lbl.textContent = 'sunset';
+      chip.className = mins <= 90 ? 'sunchip warn' : 'sunchip';
+    }
+    chip.style.visibility = 'visible';
+  }
+  render();
+  clearInterval(sunTimer);
+  sunTimer = setInterval(render, 30000);
+}
+
+/* ================= iOS install sheet ================= */
+(function(){
+  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+  const standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  if(isIOS && !standalone){
+    setTimeout(() => document.getElementById('installSheet').classList.add('show'), 1800);
+  }
+  document.getElementById('dismissSheet').addEventListener('click', () =>
+    document.getElementById('installSheet').classList.remove('show'));
+})();
+
+/* ================= service worker ================= */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () =>
+    navigator.serviceWorker.register('./sw.js').catch(() => {}));
+}
+</script>
+</body>
+</html>
