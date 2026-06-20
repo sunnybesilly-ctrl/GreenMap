@@ -120,6 +120,116 @@
     margin-top:10px;width:100%;padding:11px;border:none;border-radius:10px;
     background:var(--go-deep);color:#eafff1;font-size:14px;font-weight:600;cursor:pointer;
   }
+  /* ---- layer toggle + legend ---- */
+  .layerbtn{
+    position:fixed;right:16px;bottom:calc(env(safe-area-inset-bottom, 0px) + 96px);z-index:10;
+    width:46px;height:46px;border-radius:50%;border:1px solid var(--panel-edge);
+    background:var(--panel);color:var(--cream);cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 14px rgba(0,0,0,.5);
+  }
+  .layerbtn svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linejoin:round}
+  .layerbtn.on{background:#3d2326;border-color:#e5484d;color:#ffd9db}
+  .layerbtn:active{transform:scale(.94)}
+  .legend{
+    position:fixed;left:12px;bottom:calc(env(safe-area-inset-bottom, 0px) + 26px);z-index:11;
+    background:var(--panel);border:1px solid var(--panel-edge);border-radius:14px;
+    padding:11px 13px 9px;max-width:230px;box-shadow:0 6px 22px rgba(0,0,0,.5);
+    display:none;
+  }
+  .legend.show{display:block}
+  .legend-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:7px;
+    font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cream-dim)}
+  .legend-head button{background:none;border:none;color:var(--cream-dim);font-size:18px;cursor:pointer;line-height:1;padding:0 2px}
+  .legend-row{display:flex;align-items:center;gap:8px;font-size:12.5px;padding:2.5px 0;color:var(--cream)}
+  .legend-row i{width:11px;height:11px;border-radius:50%;flex:none;border:1.5px solid rgba(19,22,20,.8)}
+  .legend-row em{font-style:normal;color:var(--cream-dim);font-size:11px}
+  .legend-note{margin-top:7px;font-size:10.5px;line-height:1.45;color:var(--cream-dim)}
+  .maplibregl-popup-content{
+    background:var(--panel)!important;color:var(--cream)!important;border:1px solid var(--panel-edge);
+    border-radius:12px!important;padding:12px 14px!important;font-family:inherit;box-shadow:0 6px 22px rgba(0,0,0,.55)!important;
+  }
+  .maplibregl-popup-tip{border-top-color:var(--panel)!important;border-bottom-color:var(--panel)!important}
+  .maplibregl-popup-close-button{color:var(--cream-dim)!important;font-size:18px!important;padding:2px 7px!important}
+  .pop-name{font-family:"Fraunces",Georgia,serif;font-size:15.5px;font-weight:600;margin-bottom:3px;padding-right:14px}
+  .pop-badge{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    padding:3px 8px;border-radius:999px;color:#131614;margin-bottom:6px}
+  .pop-link{display:block;margin-top:4px;font-size:12px;color:var(--go);text-decoration:none}
+  .pop-note{font-size:10.5px;color:var(--cream-dim);margin-top:5px;line-height:1.4}
+
+  /* ---- routing ---- */
+  .layerbtn.shield{bottom:calc(env(safe-area-inset-bottom, 0px) + 154px)}
+  .layerbtn.shield.on{background:#3a2a1c;border-color:#e8893d;color:#ffe4c4}
+  .layerbtn.pride{bottom:calc(env(safe-area-inset-bottom, 0px) + 212px)}
+  .layerbtn.pride.on{background:#2e2138;border-color:#a76cd9;color:#ecd9ff}
+  .legend-sub{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--cream-dim);margin:6px 0 3px}
+  .legend-sec{display:none}
+  .legend-sec.show{display:block}
+  .legend-row i.sq{border-radius:3px;border:1px solid rgba(242,233,212,.35)}
+  .routebtn{
+    position:fixed;right:16px;bottom:calc(env(safe-area-inset-bottom, 0px) + 270px);z-index:10;
+    width:46px;height:46px;border-radius:50%;border:1px solid var(--panel-edge);
+    background:var(--panel);color:var(--cream);cursor:pointer;
+    display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.5);
+  }
+  .routebtn svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .routebtn.on{background:var(--go-deep);border-color:var(--go);color:#eafff1}
+  .routebtn:active{transform:scale(.94)}
+  .routepanel{
+    position:fixed;left:12px;right:12px;z-index:25;
+    top:calc(env(safe-area-inset-top, 0px) + 56px);
+    background:var(--panel);border:1px solid var(--panel-edge);border-radius:16px;
+    padding:12px;box-shadow:0 8px 30px rgba(0,0,0,.55);display:none;
+  }
+  .routepanel.show{display:block}
+  .rp-row{display:flex;gap:8px;margin-bottom:8px}
+  .rp-row input{
+    flex:1;background:var(--asphalt);border:1px solid var(--panel-edge);border-radius:10px;
+    padding:11px 12px;color:var(--cream);font-size:15px;outline:none;min-width:0;
+  }
+  .rp-row input:focus{border-color:var(--go-deep)}
+  .rp-row .miniloc{
+    flex:none;width:44px;border:1px solid var(--panel-edge);border-radius:10px;
+    background:var(--asphalt);color:var(--go);font-size:17px;cursor:pointer;
+  }
+  .rp-suggest{margin:-2px 0 8px}
+  .rp-suggest div{
+    padding:9px 11px;font-size:13.5px;color:var(--cream);cursor:pointer;
+    border-bottom:1px solid var(--panel-edge);
+  }
+  .rp-suggest div:last-child{border-bottom:none}
+  .rp-suggest div:active{background:var(--asphalt)}
+  .rp-suggest small{color:var(--cream-dim)}
+  .rp-actions{display:flex;gap:8px}
+  .rp-actions button{
+    flex:1;padding:12px;border:none;border-radius:10px;font-size:14.5px;font-weight:600;cursor:pointer;
+  }
+  #goBtn{background:var(--go-deep);color:#eafff1}
+  #goBtn:disabled{opacity:.45}
+  #closeRoute{background:var(--asphalt);color:var(--cream-dim);border:1px solid var(--panel-edge)!important}
+  .routecard{
+    position:fixed;left:12px;right:12px;z-index:12;
+    bottom:calc(env(safe-area-inset-bottom, 0px) + 12px);
+    background:var(--panel);border:1px solid var(--panel-edge);border-radius:16px;
+    padding:13px 14px 11px;box-shadow:0 -6px 30px rgba(0,0,0,.55);display:none;
+    max-height:46vh;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  }
+  .routecard.show{display:block}
+  .rc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .rc-stats{font-family:"Fraunces",Georgia,serif;font-size:16.5px;font-weight:600}
+  .rc-sub{font-size:12px;color:var(--cream-dim);margin-top:2px}
+  .rc-close{background:none;border:none;color:var(--cream-dim);font-size:20px;cursor:pointer;padding:0 4px;line-height:1}
+  .rc-sun{margin-top:9px;padding:8px 10px;border-radius:10px;font-size:12.5px;line-height:1.45;
+    background:rgba(91,217,138,.08);border:1px solid rgba(91,217,138,.25)}
+  .rc-sun.after{background:rgba(232,163,61,.1);border-color:rgba(232,163,61,.4)}
+  .rc-warnhead{margin-top:11px;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--cream-dim)}
+  .rc-town{display:flex;align-items:center;gap:9px;padding:7px 2px;font-size:13.5px;cursor:pointer;
+    border-bottom:1px solid rgba(42,50,44,.6)}
+  .rc-town:last-child{border-bottom:none}
+  .rc-town i{width:10px;height:10px;border-radius:50%;flex:none}
+  .rc-town em{font-style:normal;color:var(--cream-dim);font-size:11px;margin-left:auto;white-space:nowrap}
+  .rc-clear{margin-top:10px;font-size:12.5px;color:var(--cream-dim)}
+
   .maplibregl-ctrl-attrib{background:rgba(19,22,20,.7)!important;color:var(--cream-dim)!important;font-size:10px!important}
   .maplibregl-ctrl-attrib a{color:var(--cream-dim)!important}
 </style>
@@ -136,6 +246,72 @@
   <div class="sunchip" id="sunchip" style="visibility:hidden">
     <div class="sun"></div><span class="lbl">sunset</span>&nbsp;<span id="suntime">—</span>
   </div>
+</div>
+
+<button class="routebtn" id="routeBtn" aria-label="Plan a route">
+  <svg viewBox="0 0 24 24"><circle cx="6" cy="19" r="2.2"/><circle cx="18" cy="5" r="2.2"/><path d="M8 19h7a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h7"/></svg>
+</button>
+
+<div class="routepanel" id="routePanel">
+  <div class="rp-row">
+    <input id="fromInput" placeholder="From" autocomplete="off">
+    <button class="miniloc" id="useLoc" aria-label="Use my location">&#9678;</button>
+  </div>
+  <div class="rp-row">
+    <input id="toInput" placeholder="To" autocomplete="off">
+  </div>
+  <div class="rp-suggest" id="suggest"></div>
+  <div class="rp-actions">
+    <button id="closeRoute">Cancel</button>
+    <button id="goBtn">Route</button>
+  </div>
+</div>
+
+<div class="routecard" id="routeCard"></div>
+
+<button class="layerbtn" id="layerBtn" aria-label="Toggle sundown towns layer">
+  <svg viewBox="0 0 24 24"><path d="M12 4.5l8.5 5L12 14.5l-8.5-5z"/><path d="M3.5 13.5L12 18.5l8.5-5"/></svg>
+</button>
+
+<button class="layerbtn pride" id="lgbtBtn" aria-label="Toggle LGBTQ climate layer">
+  <svg viewBox="0 0 24 24"><path d="M5 21V4"/><path d="M5 4h13l-2.5 3.5L18 11H5"/></svg>
+</button>
+
+<button class="layerbtn shield" id="polBtn" aria-label="Toggle traffic-stop disparity layer">
+  <svg viewBox="0 0 24 24"><path d="M12 3l7 2.6v5.1c0 4.6-3 8.2-7 10.3-4-2.1-7-5.7-7-10.3V5.6z"/></svg>
+</button>
+
+<div class="legend" id="legend">
+  <div class="legend-head">
+    <span>Map key</span>
+    <button id="legendClose" aria-label="Close legend">&times;</button>
+  </div>
+  <div class="legend-sec" id="legendSundown">
+  <div class="legend-sub">Sundown towns &middot; historical</div>
+  <div class="legend-row"><i style="background:#e5484d"></i>Surely <em>(341)</em></div>
+  <div class="legend-row"><i style="background:#e8893d"></i>Probable <em>(717)</em></div>
+  <div class="legend-row"><i style="background:#d9c069"></i>Possible <em>(1,133)</em></div>
+  <div class="legend-row"><i style="background:#8a9088"></i>Don&rsquo;t know <em>(112)</em></div>
+  <div class="legend-row"><i style="background:#6f8fd9"></i>Unlikely / always biracial <em>(34)</em></div>
+  <div class="legend-row"><i style="background:#5bd98a"></i>Black town or township <em>(5)</em></div>
+  <div class="legend-row"><i style="background:#e3c84a"></i>Ticket-trap town <em>(documented)</em></div>
+  <div class="legend-row"><i style="background:#9a9272"></i>Trap, reformed / historic</div>
+  </div>
+  <div class="legend-sec" id="legendPolicing">
+  <div class="legend-sub">Traffic-stop disparity &middot; by county</div>
+  <div class="legend-row"><i class="sq" style="background:rgba(229,72,77,.55)"></i>High disparity <em>(233)</em></div>
+  <div class="legend-row"><i class="sq" style="background:rgba(232,137,61,.45)"></i>Elevated <em>(433)</em></div>
+  <div class="legend-row"><i class="sq" style="background:rgba(138,144,136,.3)"></i>Lower <em>(143)</em></div>
+  <div class="legend-row"><i class="sq" style="background:transparent;border-style:dashed"></i>No data <em>(17 states covered)</em></div>
+  </div>
+  <div class="legend-sec" id="legendLgbt">
+  <div class="legend-sub">LGBTQ climate &middot; by state</div>
+  <div class="legend-row"><i class="sq" style="background:rgba(167,108,217,.55)"></i>Most caution <em>(index &lt; 62)</em></div>
+  <div class="legend-row"><i class="sq" style="background:rgba(167,108,217,.38)"></i>Caution <em>(62&ndash;69)</em></div>
+  <div class="legend-row"><i class="sq" style="background:rgba(167,108,217,.18)"></i>Mixed <em>(70&ndash;79)</em></div>
+  <div class="legend-row"><i class="sq" style="background:transparent"></i>Friendlier <em>(80+, unshaded)</em></div>
+  </div>
+  <p class="legend-note">Historical research &amp; state-patrol stop statistics, not a present-day verdict. Absence of a flag &ne; safe. Sources: Tougaloo College / Loewen database; Stanford Open Policing Project; Equaldex. Tap anything for details.</p>
 </div>
 
 <button class="locate" id="locateBtn" aria-label="Show my location">
@@ -225,7 +401,9 @@ function onFix(pos){
 }
 
 function onErr(err){
-  watching = false; following = false;
+  if(watchId !== null){ navigator.geolocation.clearWatch(watchId); watchId = null; }
+  watching = false; following = false; hasFix = false;
+  beacon.remove();
   document.getElementById('locateBtn').classList.remove('on');
   if(err.code === 1) toast('Location blocked — allow it in Settings \u203A Safari \u203A Location');
   else toast('Couldn\u2019t get a GPS fix. Try again with a clearer sky view.');
@@ -325,6 +503,473 @@ function updateSunChip(lat, lng){
   document.getElementById('dismissSheet').addEventListener('click', () =>
     document.getElementById('installSheet').classList.remove('show'));
 })();
+
+/* ================= sundown towns layer ================= */
+const STATUS_COLOR = {
+  'Surely': '#e5484d',
+  'Probable': '#e8893d',
+  'Possible': '#d9c069',
+  "Don't Know": '#8a9088',
+  'Unlikely': '#6f8fd9',
+  'Always Biracial': '#6f8fd9',
+  'Black Town or Township': '#5bd98a'
+};
+let sundownOn = true;
+
+map.on('load', async () => {
+  const sundownData = await sundownReady;
+  map.addSource('sundown', { type: 'geojson', data: sundownData || './sundown.geojson' });
+  map.addLayer({
+    id: 'sundown-pts', type: 'circle', source: 'sundown',
+    paint: {
+      'circle-color': ['match', ['get', 'status'],
+        'Surely', '#e5484d',
+        'Probable', '#e8893d',
+        'Possible', '#d9c069',
+        "Don't Know", '#8a9088',
+        'Unlikely', '#6f8fd9',
+        'Always Biracial', '#6f8fd9',
+        'Black Town or Township', '#5bd98a',
+        '#8a9088'],
+      'circle-radius': ['interpolate', ['linear'], ['zoom'],
+        3, ['match', ['get','status'], 'Surely', 2.6, 'Probable', 2.2, 1.6],
+        8, ['match', ['get','status'], 'Surely', 6.5, 'Probable', 5.5, 4.5],
+        12, 9],
+      'circle-opacity': ['interpolate', ['linear'], ['zoom'], 3, 0.75, 9, 0.92],
+      'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 3, 0.4, 9, 1.4],
+      'circle-stroke-color': '#131614'
+    }
+  });
+
+  map.on('click', 'sundown-pts', (e) => {
+    const p = e.features[0].properties;
+    const color = STATUS_COLOR[p.status] || '#8a9088';
+    const kindNote = p.kind === 'county'
+      ? '<p class="pop-note">Pin marks the approximate center of this county.</p>' : '';
+    new maplibregl.Popup({ offset: 10, maxWidth: '260px' })
+      .setLngLat(e.lngLat)
+      .setHTML(
+        `<div class="pop-name">${p.name}, ${p.state}</div>` +
+        `<span class="pop-badge" style="background:${color}">${p.status}</span>` +
+        kindNote +
+        `<a class="pop-link" href="https://sundown.tougaloo.edu/sundowntownsshow.php?id=${p.tid}" target="_blank" rel="noopener">Full history entry &rarr;</a>` +
+        `<p class="pop-note">Historical record &middot; not a present-day verdict</p>`
+      )
+      .addTo(map);
+  });
+  map.on('mouseenter', 'sundown-pts', () => map.getCanvas().style.cursor = 'pointer');
+  map.on('mouseleave', 'sundown-pts', () => map.getCanvas().style.cursor = '');
+
+  document.getElementById('layerBtn').classList.add('on');
+
+  /* policing disparity choropleth (under the points) */
+  map.addSource('policing', { type:'geojson', data: './policing.geojson' });
+  map.addLayer({
+    id:'policing-fill', type:'fill', source:'policing',
+    paint:{
+      'fill-color': ['match', ['get','tier'],
+        'high', 'rgba(229,72,77,0.34)',
+        'elevated', 'rgba(232,137,61,0.26)',
+        'lower', 'rgba(138,144,136,0.14)',
+        'rgba(0,0,0,0)'],
+      'fill-outline-color': 'rgba(19,22,20,0.35)'
+    }
+  }, 'sundown-pts');
+
+  /* LGBTQ climate state layer (bottom of the stack) */
+  map.addSource('lgbt', { type:'geojson', data: './lgbt.geojson' });
+  map.addLayer({
+    id:'lgbt-fill', type:'fill', source:'lgbt',
+    paint:{
+      'fill-color': ['match', ['get','tier'],
+        'lowest', 'rgba(167,108,217,0.40)',
+        'low', 'rgba(167,108,217,0.26)',
+        'mid', 'rgba(167,108,217,0.12)',
+        'rgba(0,0,0,0)'],
+      'fill-outline-color': 'rgba(167,108,217,0.35)'
+    }
+  }, 'policing-fill');
+
+  map.on('click', (e) => {
+    const top = map.queryRenderedFeatures(e.point, { layers: ['sundown-pts', 'finetrap-pts'] });
+    if(top.length) return; // dedicated point handlers win
+    if(polOn){
+      const hit = map.queryRenderedFeatures(e.point, { layers: ['policing-fill'] });
+      if(hit.length){ showPolicingPopup(hit[0].properties, e.lngLat); return; }
+    }
+    if(lgbtOn){
+      const hit = map.queryRenderedFeatures(e.point, { layers: ['lgbt-fill'] });
+      if(hit.length){ showLgbtPopup(hit[0].properties, e.lngLat); }
+    }
+  });
+
+  /* fine-trap towns (documented ticket-revenue jurisdictions) */
+  const trapsData = await trapsReady;
+  map.addSource('finetraps', { type:'geojson', data: trapsData || './finetraps.geojson' });
+  map.addLayer({
+    id:'finetrap-pts', type:'circle', source:'finetraps',
+    paint:{
+      'circle-color': ['match', ['get','status'], 'reformed', '#9a9272', '#e3c84a'],
+      'circle-radius': ['interpolate', ['linear'], ['zoom'], 3, 3, 8, 7, 12, 10],
+      'circle-stroke-width': 1.6,
+      'circle-stroke-color': '#131614'
+    }
+  });
+
+  map.on('click', 'finetrap-pts', (e) => {
+    const p = e.features[0].properties;
+    const isRef = p.status === 'reformed';
+    new maplibregl.Popup({ offset: 10, maxWidth: '270px' })
+      .setLngLat(e.lngLat)
+      .setHTML(
+        `<div class="pop-name">${p.name}, ${p.st}</div>` +
+        `<span class="pop-badge" style="background:${isRef ? '#9a9272' : '#e3c84a'}">${isRef ? 'Reformed / historic' : 'Ticket-trap town'}</span>` +
+        `<p class="pop-note" style="color:var(--cream)">${p.stat}</p>` +
+        `<p class="pop-note">Source: ${p.src}. Curated list of documented cases (FY2017&ndash;19 era), not exhaustive &mdash; slow down through every small town on a highway.</p>`
+      )
+      .addTo(map);
+  });
+  map.on('mouseenter', 'finetrap-pts', () => map.getCanvas().style.cursor = 'pointer');
+  map.on('mouseleave', 'finetrap-pts', () => map.getCanvas().style.cursor = '');
+
+  document.getElementById('polBtn').classList.add('on');
+  document.getElementById('lgbtBtn').classList.add('on');
+  syncLegendSections();
+});
+
+function showPolicingPopup(p, lngLat){
+    const d = JSON.parse(p.d || '{}');
+    const tierColor = { high:'#e5484d', elevated:'#e8893d', lower:'#8a9088' }[p.tier];
+    const tierWord = { high:'High disparity', elevated:'Elevated disparity', lower:'Lower disparity' }[p.tier];
+    function lines(g, label){
+      if(!g) return '';
+      const L = [];
+      if(g.stop   != null) L.push(`stopped at <b>${g.stop}&times;</b> the white rate`);
+      if(g.search != null) L.push(`searched at <b>${g.search}&times;</b>`);
+      if(g.hitgap != null && g.hitgap > 0)
+        L.push(`searches find contraband <b>${Math.round(g.hitgap*100)} pts less often</b> (lower bar)`);
+      if(g.hitgap != null && g.hitgap <= 0)
+        L.push(`search hit rate on par with white drivers`);
+      return L.length ? `<p class="pop-note" style="color:var(--cream)"><b>${label}:</b> ${L.join('; ')}</p>` : '';
+    }
+    new maplibregl.Popup({ offset: 6, maxWidth: '280px' })
+      .setLngLat(lngLat)
+      .setHTML(
+        `<div class="pop-name">${p.name}, ${p.st}</div>` +
+        `<span class="pop-badge" style="background:${tierColor};color:#131614">${tierWord}</span>` +
+        lines(d.b, 'Black drivers') + lines(d.h, 'Hispanic drivers') +
+        `<p class="pop-note">State-patrol stops, ~${Number(p.stops).toLocaleString()}/yr &middot; Stanford Open Policing Project. Rates vs. county population; an indicator, not proof about any officer or stop.</p>`
+      )
+      .addTo(map);
+}
+
+function showLgbtPopup(p, lngLat){
+  const tierWord = { lowest:'Most caution', low:'Caution', mid:'Mixed', high:'Friendlier' }[p.tier];
+  const tierColor = { lowest:'#a76cd9', low:'#bd93e0', mid:'#d4bce8', high:'#5bd98a' }[p.tier];
+  new maplibregl.Popup({ offset: 6, maxWidth: '280px' })
+    .setLngLat(lngLat)
+    .setHTML(
+      `<div class="pop-name">${p.name}</div>` +
+      `<span class="pop-badge" style="background:${tierColor};color:#131614">${tierWord} &middot; index ${p.eq}</span>` +
+      `<p class="pop-note" style="color:var(--cream)">Laws score <b>${p.legal}</b>/100 &middot; public attitudes <b>${p.opinion}</b>/100</p>` +
+      `<a class="pop-link" href="https://www.equaldex.com/region/${p.slug}" target="_blank" rel="noopener">Equaldex state detail &rarr;</a>` +
+      `<a class="pop-link" href="https://www.hrc.org/resources/mei-see-your-cities-scores" target="_blank" rel="noopener">City-level scores (HRC MEI) &rarr;</a>` +
+      `<p class="pop-note">Index by Equaldex (laws + public opinion). Statewide climate, not a verdict on any town or person &mdash; friendly cities exist in low-scoring states and vice versa.</p>`
+    )
+    .addTo(map);
+}
+
+let legendWanted = true;
+let polOn = true;
+let lgbtOn = true;
+function syncLegendSections(){
+  document.getElementById('legendSundown').classList.toggle('show', sundownOn);
+  document.getElementById('legendPolicing').classList.toggle('show', polOn);
+  document.getElementById('legendLgbt').classList.toggle('show', lgbtOn);
+  const any = sundownOn || polOn || lgbtOn;
+  document.getElementById('legend').classList.toggle('show',
+    any && legendWanted && !document.getElementById('routeCard').classList.contains('show'));
+}
+document.getElementById('layerBtn').addEventListener('click', () => {
+  sundownOn = !sundownOn;
+  if(map.getLayer('sundown-pts'))
+    map.setLayoutProperty('sundown-pts', 'visibility', sundownOn ? 'visible' : 'none');
+  if(map.getLayer('finetrap-pts'))
+    map.setLayoutProperty('finetrap-pts', 'visibility', sundownOn ? 'visible' : 'none');
+  document.getElementById('layerBtn').classList.toggle('on', sundownOn);
+  syncLegendSections();
+});
+document.getElementById('polBtn').addEventListener('click', () => {
+  polOn = !polOn;
+  if(map.getLayer('policing-fill'))
+    map.setLayoutProperty('policing-fill', 'visibility', polOn ? 'visible' : 'none');
+  document.getElementById('polBtn').classList.toggle('on', polOn);
+  syncLegendSections();
+});
+document.getElementById('lgbtBtn').addEventListener('click', () => {
+  lgbtOn = !lgbtOn;
+  if(map.getLayer('lgbt-fill'))
+    map.setLayoutProperty('lgbt-fill', 'visibility', lgbtOn ? 'visible' : 'none');
+  document.getElementById('lgbtBtn').classList.toggle('on', lgbtOn);
+  syncLegendSections();
+});
+syncLegendSections();
+document.getElementById('legendClose').addEventListener('click', () => {
+  legendWanted = false;
+  document.getElementById('legend').classList.remove('show');
+});
+
+/* ================= routing (GraphHopper) ================= */
+const GH_KEY = 'b55ec68c-26a6-4ef5-b8d2-9ec0a26ab954';
+const SEVERITY = {'Surely':0,'Probable':1,'Possible':2,"Don't Know":3,'Unlikely':4,'Always Biracial':4,'Black Town or Township':5};
+let SUNDOWN = null, TRAPS = null;
+const sundownReady = fetch('./sundown.geojson').then(r => r.json()).then(d => SUNDOWN = d).catch(() => null);
+const trapsReady = fetch('./finetraps.geojson').then(r => r.json()).then(d => TRAPS = d).catch(() => null);
+
+let fromPt = null, toPt = null, activeInput = null;
+
+function openRoutePanel(show){
+  document.getElementById('routePanel').classList.toggle('show', show);
+  document.getElementById('routeBtn').classList.toggle('on', show);
+  if(show){ document.getElementById('installSheet').classList.remove('show'); }
+}
+document.getElementById('routeBtn').addEventListener('click', () =>
+  openRoutePanel(!document.getElementById('routePanel').classList.contains('show')));
+document.getElementById('closeRoute').addEventListener('click', () => openRoutePanel(false));
+
+document.getElementById('useLoc').addEventListener('click', () => {
+  if(lastPos){
+    fromPt = [lastPos.coords.longitude, lastPos.coords.latitude];
+    document.getElementById('fromInput').value = 'My location';
+  } else {
+    navigator.geolocation.getCurrentPosition(p => {
+      fromPt = [p.coords.longitude, p.coords.latitude];
+      document.getElementById('fromInput').value = 'My location';
+    }, () => toast('Couldn\u2019t get your location'), { enableHighAccuracy:true, timeout:10000 });
+  }
+});
+
+let debounceT;
+function wireInput(id, setter){
+  const el = document.getElementById(id);
+  el.addEventListener('input', () => {
+    setter(null);
+    activeInput = id;
+    clearTimeout(debounceT);
+    const q = el.value.trim();
+    if(q.length < 3 || q === 'My location'){ renderSuggest([]); return; }
+    debounceT = setTimeout(async () => {
+      try{
+        const r = await fetch(`https://graphhopper.com/api/1/geocode?q=${encodeURIComponent(q)}&limit=4&locale=en&key=${GH_KEY}`);
+        const d = await r.json();
+        renderSuggest(d.hits || []);
+      }catch(e){ renderSuggest([]); }
+    }, 400);
+  });
+}
+function renderSuggest(hits){
+  const box = document.getElementById('suggest');
+  box.innerHTML = '';
+  hits.forEach(h => {
+    const line2 = [h.city, h.state, h.country].filter(x => x && x !== h.name).join(', ');
+    const div = document.createElement('div');
+    div.innerHTML = `${h.name} <small>${line2}</small>`;
+    div.addEventListener('click', () => {
+      document.getElementById(activeInput).value = h.name + (h.state ? ', ' + h.state : '');
+      const pt = [h.point.lng, h.point.lat];
+      if(activeInput === 'fromInput') fromPt = pt; else toPt = pt;
+      box.innerHTML = '';
+    });
+    box.appendChild(div);
+  });
+}
+wireInput('fromInput', v => fromPt = v);
+wireInput('toInput',  v => toPt  = v);
+
+async function resolveIfNeeded(id, current){
+  if(current) return current;
+  const q = document.getElementById(id).value.trim();
+  if(!q) return null;
+  const r = await fetch(`https://graphhopper.com/api/1/geocode?q=${encodeURIComponent(q)}&limit=1&locale=en&key=${GH_KEY}`);
+  const d = await r.json();
+  if(d.hits && d.hits.length) return [d.hits[0].point.lng, d.hits[0].point.lat];
+  return null;
+}
+
+/* distance from point to route segment, km (equirectangular) */
+function distPtSeg(p, a, b){
+  const cos = Math.cos(p[1] * Math.PI / 180);
+  const ax = (a[0]-p[0])*cos, ay = a[1]-p[1];
+  const bx = (b[0]-p[0])*cos, by = b[1]-p[1];
+  const dx = bx-ax, dy = by-ay;
+  const len2 = dx*dx + dy*dy;
+  let t = len2 ? -(ax*dx + ay*dy)/len2 : 0;
+  t = Math.max(0, Math.min(1, t));
+  const cx = ax + t*dx, cy = ay + t*dy;
+  return Math.sqrt(cx*cx + cy*cy) * 111.32;
+}
+
+function analyzeRoute(coords){
+  if(!SUNDOWN) return [];
+  const step = Math.max(1, Math.floor(coords.length / 1500));
+  const line = coords.filter((_, i) => i % step === 0 || i === coords.length-1);
+  let minX=180, minY=90, maxX=-180, maxY=-90;
+  line.forEach(c => { minX=Math.min(minX,c[0]); maxX=Math.max(maxX,c[0]); minY=Math.min(minY,c[1]); maxY=Math.max(maxY,c[1]); });
+  const pad = 0.2;
+  const hits = [];
+  for(const f of SUNDOWN.features){
+    const [lng, lat] = f.geometry.coordinates;
+    if(lng < minX-pad || lng > maxX+pad || lat < minY-pad || lat > maxY+pad) continue;
+    const p = f.properties;
+    if(p.status === 'Black Town or Township' || p.status === 'Unlikely' || p.status === 'Always Biracial') continue;
+    const limit = p.kind === 'county' ? 12 : 3;
+    let best = Infinity, bestSeg = 0;
+    for(let i = 0; i < line.length-1; i++){
+      const d = distPtSeg([lng, lat], line[i], line[i+1]);
+      if(d < best){ best = d; bestSeg = i; }
+      if(best < 0.05) break;
+    }
+    if(best <= limit) hits.push({ p, lng, lat, km: best, seg: bestSeg });
+  }
+  hits.sort((a, b) => a.seg - b.seg);
+  const traps = [];
+  if(TRAPS){
+    for(const f of TRAPS.features){
+      const [lng, lat] = f.geometry.coordinates;
+      if(lng < minX-pad || lng > maxX+pad || lat < minY-pad || lat > maxY+pad) continue;
+      let best = Infinity, bestSeg = 0;
+      for(let i = 0; i < line.length-1; i++){
+        const d = distPtSeg([lng, lat], line[i], line[i+1]);
+        if(d < best){ best = d; bestSeg = i; }
+      }
+      if(best <= 5) traps.push({ p: f.properties, lng, lat, km: best, seg: bestSeg });
+    }
+    traps.sort((a, b) => a.seg - b.seg);
+  }
+  return { hits, traps };
+}
+
+function fmtDur(ms){
+  const m = Math.round(ms/60000), h = Math.floor(m/60);
+  return h ? `${h} h ${m%60} m` : `${m} min`;
+}
+
+function drawRoute(coords){
+  const gj = { type:'Feature', geometry:{ type:'LineString', coordinates:coords } };
+  if(map.getSource('route')) map.getSource('route').setData(gj);
+  else{
+    const before = map.getLayer('sundown-pts') ? 'sundown-pts' : undefined;
+    map.addSource('route', { type:'geojson', data: gj });
+    map.addLayer({ id:'route-casing', type:'line', source:'route',
+      paint:{ 'line-color':'#0d100e', 'line-width':8, 'line-opacity':.7 },
+      layout:{ 'line-cap':'round', 'line-join':'round' } }, before);
+    map.addLayer({ id:'route-line', type:'line', source:'route',
+      paint:{ 'line-color':'#5bd98a', 'line-width':4.5 },
+      layout:{ 'line-cap':'round', 'line-join':'round' } }, before);
+  }
+  let minX=180, minY=90, maxX=-180, maxY=-90;
+  coords.forEach(c => { minX=Math.min(minX,c[0]); maxX=Math.max(maxX,c[0]); minY=Math.min(minY,c[1]); maxY=Math.max(maxY,c[1]); });
+  map.fitBounds([[minX, minY], [maxX, maxY]], { padding:{ top:120, bottom:240, left:40, right:40 }, duration:1000 });
+}
+
+function clearRoute(){
+  if(map.getSource('route')){
+    map.removeLayer('route-line'); map.removeLayer('route-casing'); map.removeSource('route');
+  }
+  document.getElementById('routeCard').classList.remove('show');
+  syncLegendSections();
+}
+
+document.getElementById('goBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('goBtn');
+  btn.disabled = true; btn.textContent = 'Routing\u2026';
+  try{
+    fromPt = await resolveIfNeeded('fromInput', fromPt);
+    toPt   = await resolveIfNeeded('toInput', toPt);
+    if(!fromPt || !toPt){ toast('Enter both a start and a destination'); return; }
+    const url = `https://graphhopper.com/api/1/route?point=${fromPt[1]},${fromPt[0]}&point=${toPt[1]},${toPt[0]}&profile=car&points_encoded=false&locale=en&key=${GH_KEY}`;
+    const r = await fetch(url);
+    const d = await r.json();
+    if(!d.paths || !d.paths.length){ toast(d.message || 'No route found'); return; }
+    const path = d.paths[0];
+    drawRoute(path.points.coordinates);
+    showRouteCard(path);
+    openRoutePanel(false);
+  }catch(e){
+    toast('Routing failed — check your connection');
+  }finally{
+    btn.disabled = false; btn.textContent = 'Route';
+  }
+});
+
+function showRouteCard(path){
+  const card = document.getElementById('routeCard');
+  document.getElementById('legend').classList.remove('show');
+  const mi = (path.distance / 1609.34).toFixed(0);
+  const arrive = new Date(Date.now() + path.time);
+  const dest = path.points.coordinates[path.points.coordinates.length-1];
+  const set = sunsetFor(arrive, dest[1], dest[0]);
+  let sunHtml = '';
+  if(set){
+    const diff = Math.round((set - arrive) / 60000);
+    if(diff >= 0){
+      sunHtml = `<div class="rc-sun">Arrives ~${arrive.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'})} — about <b>${Math.floor(diff/60) ? Math.floor(diff/60)+' h ' : ''}${diff%60} m before sunset</b> at your destination.</div>`;
+    } else {
+      const after = -diff;
+      sunHtml = `<div class="rc-sun after">Arrives ~${arrive.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'})} — about <b>${Math.floor(after/60) ? Math.floor(after/60)+' h ' : ''}${after%60} m after sunset</b>. Part of this drive is after dark.</div>`;
+    }
+  }
+  const res = SUNDOWN ? analyzeRoute(path.points.coordinates) : { hits: [], traps: [] };
+  const hits = res.hits, traps = res.traps;
+  let warnHtml;
+  if(!SUNDOWN){
+    warnHtml = `<div class="rc-warnhead">Town data still loading — reopen route in a moment</div>`;
+  } else if(hits.length === 0){
+    warnHtml = `<div class="rc-warnhead">No flagged towns within 3 km of this route</div>
+      <div class="rc-clear">Reminder: the database is historical and incomplete — no flag &ne; safe.</div>`;
+  } else {
+    const counts = {};
+    hits.forEach(h => counts[h.p.status] = (counts[h.p.status]||0) + 1);
+    const summary = Object.entries(counts).sort((a,b) => SEVERITY[a[0]]-SEVERITY[b[0]])
+      .map(([s,n]) => `${n} ${s}`).join(' &middot; ');
+    warnHtml = `<div class="rc-warnhead">Passes near ${hits.length} flagged ${hits.length===1?'town':'towns'}: ${summary}</div>` +
+      hits.map((h,i) =>
+        `<div class="rc-town" data-i="${i}">
+          <i style="background:${STATUS_COLOR[h.p.status]||'#8a9088'}"></i>
+          <span>${h.p.name}, ${h.p.state}${h.p.kind==='county' ? ' <small style="color:var(--cream-dim)">(county area)</small>' : ''}</span>
+          <em>${h.p.status} &middot; ${h.km < 1 ? 'on route' : h.km.toFixed(0)+' km off'}</em>
+        </div>`).join('') +
+      `<div class="rc-clear">Listed in driving order. Tap a town to see it on the map.</div>`;
+  }
+  let trapHtml = '';
+  if(traps.length){
+    trapHtml = `<div class="rc-warnhead" style="margin-top:9px">Ticket-trap towns near route (${traps.length})</div>` +
+      traps.map((t,i) =>
+        `<div class="rc-town" data-t="${i}">
+          <i style="background:${t.p.status==='reformed' ? '#9a9272' : '#e3c84a'}"></i>
+          <span>${t.p.name}, ${t.p.st}</span>
+          <em>${t.p.status==='reformed' ? 'reformed' : 'slow down'}</em>
+        </div>`).join('');
+  }
+  card.innerHTML =
+    `<div class="rc-head">
+      <div><div class="rc-stats">${mi} mi &middot; ${fmtDur(path.time)}</div>
+      <div class="rc-sub">Leaving now &middot; drive time only, no stops</div></div>
+      <button class="rc-close" id="rcClose" aria-label="Clear route">&times;</button>
+    </div>` + sunHtml + warnHtml + trapHtml;
+  card.classList.add('show');
+  document.getElementById('rcClose').addEventListener('click', clearRoute);
+  card.querySelectorAll('.rc-town[data-i]').forEach(el =>
+    el.addEventListener('click', () => {
+      const h = hits[+el.dataset.i];
+      map.flyTo({ center:[h.lng, h.lat], zoom: 10.5, duration: 900 });
+    }));
+  card.querySelectorAll('.rc-town[data-t]').forEach(el =>
+    el.addEventListener('click', () => {
+      const t = traps[+el.dataset.t];
+      map.flyTo({ center:[t.lng, t.lat], zoom: 11, duration: 900 });
+    }));
+}
 
 /* ================= service worker ================= */
 if('serviceWorker' in navigator){
