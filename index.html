@@ -635,6 +635,7 @@ map.on('load', async () => {
   document.getElementById('polBtn').classList.add('on');
   document.getElementById('lgbtBtn').classList.add('on');
   syncLegendSections();
+  restoreSavedRoute();
 });
 
 function showPolicingPopup(p, lngLat){
@@ -727,6 +728,32 @@ const sundownReady = fetch('./sundown.geojson').then(r => r.json()).then(d => SU
 const trapsReady = fetch('./finetraps.geojson').then(r => r.json()).then(d => TRAPS = d).catch(() => null);
 
 let fromPt = null, toPt = null, activeInput = null;
+
+const ROUTE_KEY = 'gl_route_v1';
+function saveRoute(path){
+  try{
+    localStorage.setItem(ROUTE_KEY, JSON.stringify({
+      fromPt, toPt,
+      fromText: document.getElementById('fromInput').value,
+      toText: document.getElementById('toInput').value,
+      path
+    }));
+  }catch(e){}
+}
+function clearSavedRoute(){
+  try{ localStorage.removeItem(ROUTE_KEY); }catch(e){}
+}
+function restoreSavedRoute(){
+  let saved;
+  try{ saved = JSON.parse(localStorage.getItem(ROUTE_KEY) || 'null'); }catch(e){ saved = null; }
+  if(!saved || !saved.path) return;
+  fromPt = saved.fromPt; toPt = saved.toPt;
+  document.getElementById('fromInput').value = saved.fromText || '';
+  document.getElementById('toInput').value = saved.toText || '';
+  drawRoute(saved.path.points.coordinates);
+  showRouteCard(saved.path);
+  toast('Restored your last route', 2500);
+}
 
 function openRoutePanel(show){
   document.getElementById('routePanel').classList.toggle('show', show);
@@ -877,6 +904,7 @@ function clearRoute(){
     map.removeLayer('route-line'); map.removeLayer('route-casing'); map.removeSource('route');
   }
   document.getElementById('routeCard').classList.remove('show');
+  clearSavedRoute();
   syncLegendSections();
 }
 
@@ -895,6 +923,7 @@ document.getElementById('goBtn').addEventListener('click', async () => {
     drawRoute(path.points.coordinates);
     showRouteCard(path);
     openRoutePanel(false);
+    saveRoute(path);
   }catch(e){
     toast('Routing failed — check your connection');
   }finally{
